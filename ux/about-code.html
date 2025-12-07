@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>About Us - ByteToBinary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#135bec",
+              "background-light": "#ffffff",
+              "background-dark": "#101622",
+            },
+            fontFamily: {
+              display: ["Space Grotesk", "sans-serif"],
+            },
+            borderRadius: { DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px" },
+          },
+        },
+      };
+    </script>
+<style type="text/tailwindcss">
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+      @keyframes textGlow {
+        0%, 100% {
+          text-shadow: 0 0 5px rgba(200, 220, 255, 0.5), 0 0 10px rgba(173, 216, 230, 0.4);
+        }
+        50% {
+          text-shadow: 0 0 10px rgba(200, 220, 255, 0.8), 0 0 20px rgba(173, 216, 230, 0.6);
+        }
+      }
+      .animate-text-glow {
+        animation: textGlow 4s ease-in-out infinite;
+      }
+    </style>
+</head>
+<body class="font-display bg-background-light">
+<div class="relative flex min-h-screen w-full flex-col">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center">
+<div class="layout-content-container flex w-full flex-1 flex-col">
+<header class="absolute top-0 z-10 flex w-full items-center justify-between whitespace-nowrap px-4 py-3 sm:px-10 lg:px-20 xl:px-40">
+<div class="flex items-center gap-4 text-white">
+<div class="size-4">
+<svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">ByteToBinary</h2>
+</div>
+<div class="hidden flex-1 justify-end gap-8 md:flex">
+<div class="flex items-center gap-9">
+<a class="text-sm font-medium leading-normal text-white hover:text-white/80" href="#">About Us</a>
+<a class="text-sm font-medium leading-normal text-white hover:text-white/80" href="#">Services</a>
+<a class="text-sm font-medium leading-normal text-white hover:text-white/80" href="#">Technologies</a>
+<a class="text-sm font-medium leading-normal text-white hover:text-white/80" href="#">Contact</a>
+</div>
+<button class="flex h-10 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary px-4 text-sm font-bold leading-normal tracking-[0.015em] text-white">
+<span class="truncate">Get in Touch</span>
+</button>
+</div>
+</header>
+<main class="w-full">
+<div class="relative flex h-[60vh] min-h-[500px] w-full items-center justify-center overflow-hidden bg-gray-900">
+<div class="absolute inset-0 z-0 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZqiFSAdiIbsFhnMiqlPVIDJlJ5zIxb--G7et6RmgseA3bqfnw4gxVCGJj2tC2w8QiNE2XtQTMSSSbXWtqv29g2QsssE0nVQyiZBPfTK2ApdiXuRiPB7WrJfUhjhcVtmpw_TqLSN0WmIq7ZbwPpqhAR8DUwcaNSqakuW4roab-1J5p4bkS7L_qfZjWdLO0Ew4SHuqsvB7-xDEYBYQi7EmPB0cQabcKBjlZEoYl36a_b6z6LWoH7fSbRXmocHvj_RdZOtBIEUyCZQDe");'></div>
+<div class="absolute inset-0 z-0 bg-black/50"></div>
+<div class="relative z-10 flex flex-col items-center gap-4 px-4 text-center">
+<h1 class="animate-text-glow text-4xl font-black leading-tight tracking-[-0.033em] text-white drop-shadow-lg sm:text-5xl md:text-6xl">About Us - ByteToBinary</h1>
+<p class="max-w-3xl text-base font-normal leading-normal text-gray-200 drop-shadow-sm sm:text-lg">Welcome to ByteToBinary, where decades of software engineering expertise are leveraged to build innovative, scalable, and future-proof solutions for your business.</p>
+</div>
+</div>
+<div class="px-4 md:px-10 lg:px-20 xl:px-40">
+<div class="mx-auto max-w-[960px]">
+<h2 class="text-gray-900 text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-10">My Journey in Technology</h2>
+<div class="grid grid-cols-[40px_1fr] gap-x-2 px-4">
+<div class="flex flex-col items-center gap-1 pt-3">
+<span class="material-symbols-outlined text-gray-700 text-2xl">movie</span>
+<div class="w-[1.5px] bg-gray-200 h-2 grow"></div>
+</div>
+<div class="flex flex-1 flex-col py-3">
+<p class="text-gray-900 text-base font-medium leading-normal">Mastering Media Streaming</p>
+<p class="text-gray-600 text-base font-normal leading-normal">Delivering high-performance, scalable media solutions to millions of users.</p>
+</div>
+<div class="flex flex-col items-center gap-1">
+<div class="w-[1.5px] bg-gray-200 h-2"></div>
+<span class="material-symbols-outlined text-gray-700 text-2xl">shopping_cart</span>
+<div class="w-[1.5px] bg-gray-200 h-2 grow"></div>
+</div>
+<div class="flex flex-1 flex-col py-3">
+<p class="text-gray-900 text-base font-medium leading-normal">Innovating in E-commerce</p>
+<p class="text-gray-600 text-base font-normal leading-normal">Architecting robust e-commerce platforms with seamless user experiences.</p>
+</div>
+<div class="flex flex-col items-center gap-1 pb-3">
+<div class="w-[1.5px] bg-gray-200 h-2"></div>
+<span class="material-symbols-outlined text-gray-700 text-2xl">local_shipping</span>
+</div>
+<div class="flex flex-1 flex-col py-3">
+<p class="text-gray-900 text-base font-medium leading-normal">Modernizing Transport Logistics</p>
+<p class="text-gray-600 text-base font-normal leading-normal">Developing real-time logistics systems for complex transport networks.</p>
+</div>
+</div>
+<div class="flex flex-col gap-10 px-4 py-10 @container my-10 rounded-xl bg-gray-50">
+<div class="flex flex-col gap-4">
+<h1 class="text-gray-900 tracking-light text-[32px] font-bold leading-tight @[480px]:text-4xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] max-w-[720px]">Our Core Values</h1>
+<p class="text-gray-600 text-base font-normal leading-normal max-w-[720px]">These principles guide our work, ensuring we deliver not just code, but value and partnership to every client.</p>
+</div>
+<div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-3 p-0">
+<div class="flex flex-1 flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4">
+<span class="material-symbols-outlined text-primary text-2xl">lightbulb</span>
+<div class="flex flex-col gap-1">
+<h2 class="text-gray-900 text-base font-bold leading-tight">Commitment to Innovation</h2>
+<p class="text-gray-600 text-sm font-normal leading-normal">We leverage cutting-edge technologies like AI and reactive programming to build solutions that are ready for the future.</p>
+</div>
+</div>
+<div class="flex flex-1 flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4">
+<span class="material-symbols-outlined text-primary text-2xl">handshake</span>
+<div class="flex flex-col gap-1">
+<h2 class="text-gray-900 text-base font-bold leading-tight">Client-Centric Partnership</h2>
+<p class="text-gray-600 text-sm font-normal leading-normal">Your success is our success. We work closely with you to understand your goals and deliver tailored solutions.</p>
+</div>
+</div>
+<div class="flex flex-1 flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4">
+<span class="material-symbols-outlined text-primary text-2xl">code</span>
+<div class="flex flex-col gap-1">
+<h2 class="text-gray-900 text-base font-bold leading-tight">Engineering Excellence</h2>
+<p class="text-gray-600 text-sm font-normal leading-normal">With a foundation in robust frameworks and cloud platforms, we build high-quality, scalable, and maintainable software.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-6 px-4 py-10">
+<div class="flex flex-col items-center gap-2 text-center">
+<h2 class="text-gray-900 text-3xl font-bold leading-tight tracking-[-0.015em]">Our Technological Edge</h2>
+<p class="text-gray-600 text-base font-normal leading-normal max-w-2xl">We go beyond just listing technologies. We leverage a modern, powerful stack to build future-proof, efficient, and scalable solutions tailored to your specific needs.</p>
+</div>
+<div class="grid grid-cols-2 gap-4 py-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md">
+<img class="h-10 w-10" data-alt="Java logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAw7zFWxBwWL5S4uZdma59tNM8835F0PoJVStcfc__9y3uBjYmG-Xs0MlNPWYLLvez76nbONbN8EBcIANAV14nmk9pYVgSny_Kzp45e48lFMOK0KJUOIylr_2yQjqSBKlS9Ydy8_4dt0Y2gEsbWaPgt90pR6TX_2PagiLmjWfDuLTXwg7w8Yz8Ky_nek03j89gRyyd5-551yVb8REJZUcrhweyBrkHiD64x4S3Kyoein9I4WMmH7ZdPTrLjhHVStKXxF0MjlOmK_hy-"/>
+<p class="text-sm font-medium text-gray-900">Java</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md">
+<img class="h-10 w-10" data-alt="Spring Framework logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJsxVeUpbq2gNvUXByhW7XBg2TxcdRRnElSZd3m-Jf1Dng_-RYneA1WnZw6QOuQDGlSLPHeg5kBAt7FQ_oFgmzCykD3fEQ5TFGkH0uH_3Ov0sTvzFv8bJOgNhcljUl0Tf4j-6mFOSbLdyNS7ekZKFIMbeH325LwYghxUUpxPEEbguhwc84hG87cf5aHWqXBIW8yxw3mj13LEAuyWmNr7Is75obP4OHYiaUexyHZHA-PYHG8iwvyBi0nzS3Bl-EUwNoEXXcNLVvvK52"/>
+<p class="text-sm font-medium text-gray-900">Spring</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md">
+<img class="h-10 w-10" data-alt="React logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLGV-zYR1KCfdKHYPltdp9vZIBhk6QA7FLifVhi3-Damrux5rwErZuTJ8mMICpOlShkJq5z_ua_u76pRHNENNTpZ8aqDLxowBguuQ0lNHo_-zn3fxt2ma1mBk62Us2tZ8Al7PaiYO4frsxlCPgA9N8NGlo0O5koYBqK2aTKPJvCf7j1uBtrS7dOupRYEP6_SlV8lIrIhDbowW_QoFJTd-U7YdezNhuCDYaDRLI0_JUCiiwYVA_KiwHxcMEcuQIfVQXbly4H99_DNVQ"/>
+<p class="text-sm font-medium text-gray-900">React</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md">
+<img class="h-10 w-10" data-alt="Angular logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa09f2xXRJhmVBCZDMW5fTA_wnmR0OoBs1ELxBte0IS5OwQLtPSx0BD2bQBMKgok_RYL6QJeMyJcrhD-e9qWZ6YOroCGUEnmsqvJfh3UxTPOfw542TPN-s4nJcF9ZMz_x7cuJreuAcCEl0-xVgHJNYyuraFIkwa19y1h5hAoRyV36ClBGV87OnOUpGK7GM63XCzvyAtjZJl7Ha3mdq_TNJUYwMNEw5KvNTKzKtcj1CINNvRvckE8aqvblDh1lhQ9xxaeOYsipBZfLg"/>
+<p class="text-sm font-medium text-gray-900">Angular</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md">
+<img class="h-10 w-10" data-alt="Flutter logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz6_6cPntvwQYpxWXavabJCfcsxsFLKHPHGad4P9makzT5mkiJPITnqeu0UIvkdhGBeZzENxxyw5dj6PQB1iMpPo6soCME1HTpzNKzBM_htLJhmkRURB5bJDoK_n8V9-iaKfvz38cT4oDLL11zuOwlyN5aIC00DGyD1slpVBDWL9KxcUORU2lEv-iZkIGeSpqa6uoD2VIpJh9hC_sKCPS5MZdlr0oPPMHyvy-9GxDHkzh7ma5S66r56Cg1RNK8e62p0KjvNazso-2A"/>
+<p class="text-sm font-medium text-gray-900">Flutter</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md">
+<img class="h-10 w-10" data-alt="AWS logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMFoxrPFDKR90mHGhU1fouOkP22IQ66RQd60qN45fMRgMZVnC8FjX_zj3VTt9upBpD-lSSuH59oKU7gZYiT4o1ryO23_vD7gz4KxlrGea2nNxOrAS1XUMU1IJcD6lef2MUC_gr5ouxUKshbcoPltBhtqBKqtmFX-vg8jEgH9ktiW3gkEbJgMFPD-USxM7zTYp4DEDLhXwbu9eS6UkA-h5XOWc63atHrAgZFGKh9kFzeCdvMRQ3OuITRoeQX3fPE2kRrB6mFaJTa8Mo"/>
+<p class="text-sm font-medium text-gray-900">AWS</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md">
+<img class="h-10 w-10" data-alt="Azure logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlRXy6pdtHjN64JHSVpkkqsiv07sMyT2dgzfbk5CQKB3lg8E4YnxboobOMU3uQaGS29g8Yr0FaECEMIfTDVCBdlHKLW1LKBz5_aOUiacfcURLuAB76YxXn25_9NJv10Zh8FdXLZfxuuV6lLxVlofBdcFMXmCg_YNe3LpSr2g83e6Nt_HvQNLKbGr5Uf2UJoZLDEwR1nSetihZiBmhX4M7nwxReaWFTunOacWJQZ4U9nkC6VFYhmI0RrQ2zt3fpy-awiNe2bv-IpVS1"/>
+<p class="text-sm font-medium text-gray-900">Azure</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md">
+<img class="h-10 w-10" data-alt="Google Cloud Platform logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKBQgky_jOLkZc__OnK3JLtRJTD-IzoxMXwI4mhkRoQpr9h90ufZz6DCBtVby7v8_VP-6bgKdPAoju8sowzFcLeOXQcoQHz7-EMCnzEyPOC3yXTf3jVwtLCaPU5QPvV1WwsODDZ5wAt2mxoMAmIJuq7HgTsVcg_yNe-_DzK8ifQrHANUci1IlvxnyZFu1EmTYLYZh_pABCdafL5WcbulT_FJdrxlmQK7j8CxmPx0H6k3fDlRggtrz8bUfER3NMkaUADLJN8F5rmG97"/>
+<p class="text-sm font-medium text-gray-900">GCP</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md">
+<img class="h-10 w-10" data-alt="Kafka logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4O8M0OUidJ-rVmzlcCLlvvhQohV1tQcLBK1JB_l2dKt7eAW-EtfDLH946otI9vc0aQwQIJWS18efJoqatq_4tqEdHI1yLb9EOksVoILP7KqabjpZo4GTfgLeNo3aQPq4aRX9rYPtUp9yuikmpDRC4at-ymPaWFcdcmbS-CrmZc3y1J3-exF-FrMOrLZ1zNqeGZHgwitMVoxGjtSgwXmP7zX8fbp1cLXrq_lUpRTHuSouBKlSBvCw1wb7aIplubTmFMTFmJ4HmSdlo"/>
+<p class="text-sm font-medium text-gray-900">Kafka</p>
+</div>
+<div class="flex flex-col items-center justify-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-shadow hover:shadow-md">
+<img class="h-10 w-10" data-alt="Quarkus logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgCAjL7omivulrMIOKAe30nGAj45vj_Qw3m6FmyNaMCIzhacZSJSs3BuYRecn6XSu0yZKvuZoEbww7GEahC7NBhHKH7e6B45F61dLFOL82FKRwrn8Pf5-Y8sAXL_QSl3E_J69GtRkSv5LusFyJWDm228ycD9hiVXqYBvzXlmnpGh_Ha7NhvjvH90Q2LTsjfM3tXHc2Q6-dF35xzL_BLw_LRgATCrjbyvxNaz80Kd5YslEgncLNR9wMoF2OiH4WjciJS-lBwjPAV1iZ"/>
+<p class="text-sm font-medium text-gray-900">Quarkus</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

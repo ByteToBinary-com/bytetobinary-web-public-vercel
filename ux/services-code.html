@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Services - ByteToBinary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#135bec",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#101622",
+                        "neutral": {
+                            50: '#F8F9FA',
+                            100: '#E9ECEF',
+                            200: '#DEE2E6',
+                            300: '#CED4DA',
+                            400: '#ADB5BD',
+                            500: '#6C757D',
+                            600: '#495057',
+                            700: '#343A40',
+                            800: '#212529'
+                        }
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-white group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-5">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-neutral-200 px-4 md:px-10 py-3">
+<div class="flex items-center gap-4 text-black">
+<div class="size-4 text-neutral-800">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-neutral-800 text-lg font-bold leading-tight tracking-[-0.015em]">ByteToBinary</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8">
+<div class="flex items-center gap-9">
+<a class="text-neutral-600 text-sm font-medium leading-normal" href="#">Home</a>
+<a class="text-primary text-sm font-bold leading-normal" href="#">Services</a>
+<a class="text-neutral-600 text-sm font-medium leading-normal" href="#">About</a>
+<a class="text-neutral-600 text-sm font-medium leading-normal" href="#">Contact</a>
+</div>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Schedule a Consultation</span>
+</button>
+</div>
+</header>
+<div class="relative w-full h-[400px] md:h-[500px] overflow-hidden">
+<img alt="Diverse team of developers collaborating in a modern, sunlit office, working on laptops with data visualizations and code on screen." class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZUhO1AmorzrCxwbEm_1wDrImMzlVXYpg3JsLbHznCNxHBJUjue2HO_Nk2Kkb0CVwZuFzjLEu31l0QDJ1C7cBOGyP9pVFSe6M0H4tA92EiUMLqbbp6ILtVoXKMONl52YQwr5IrSqUch8BZ_IQAAvWC8Iin6Tnq-OnAOYgAhptALH_qJov-CL1xl2v5vqbj53vw6mgSXZHqFzi67ELYx5fEijN8DlOH7RajL2L0HuAPBqfsYPbqT0iIlh47eyGy_IKWMRLX-PHp1WZp"/>
+<div class="absolute inset-0 bg-black/50"></div>
+<div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white p-8">
+<h1 class="text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em]">Our Services</h1>
+<p class="text-base md:text-lg mt-4 max-w-3xl text-white/90">We solve complex challenges in media, e-commerce, and transport with cutting-edge technology and deep industry expertise.</p>
+</div>
+</div>
+<div class="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-4 p-4 mt-12 md:mt-20">
+<div class="flex flex-1 gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-4 flex-col">
+<span class="material-symbols-outlined text-primary">
+                            terminal
+                        </span>
+<div class="flex flex-col gap-1">
+<h2 class="text-neutral-800 text-base font-bold leading-tight">Expert-Led Development</h2>
+<p class="text-neutral-600 text-sm font-normal leading-normal">Leverage decades of experience to build robust and efficient software.</p>
+</div>
+</div>
+<div class="flex flex-1 gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-4 flex-col">
+<span class="material-symbols-outlined text-primary">
+                            data_object
+                        </span>
+<div class="flex flex-col gap-1">
+<h2 class="text-neutral-800 text-base font-bold leading-tight">Modern Tech Stack</h2>
+<p class="text-neutral-600 text-sm font-normal leading-normal">Utilizing the best of Java, Cloud, and modern frameworks for future-proof applications.</p>
+</div>
+</div>
+<div class="flex flex-1 gap-3 rounded-lg border border-neutral-200 bg-neutral-50 p-4 flex-col">
+<span class="material-symbols-outlined text-primary">
+                            trending_up
+                        </span>
+<div class="flex flex-col gap-1">
+<h2 class="text-neutral-800 text-base font-bold leading-tight">Scalable &amp; Resilient Solutions</h2>
+<p class="text-neutral-600 text-sm font-normal leading-normal">Architecting systems that grow with your business and withstand failure.</p>
+</div>
+</div>
+</div>
+<h2 class="text-neutral-800 text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-12 md:pt-20">Our Services by Industry</h2>
+<div class="pb-3">
+<div class="flex border-b border-neutral-200 px-4 gap-8">
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-primary pb-[13px] pt-4" href="#">
+<p class="text-primary text-sm font-bold leading-normal tracking-[0.015em]">Media</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-neutral-500 pb-[13px] pt-4" href="#">
+<p class="text-neutral-500 text-sm font-bold leading-normal tracking-[0.015em]">E-commerce</p>
+</a>
+<a class="flex flex-col items-center justify-center border-b-[3px] border-b-transparent text-neutral-500 pb-[13px] pt-4" href="#">
+<p class="text-neutral-500 text-sm font-bold leading-normal tracking-[0.015em]">Transport</p>
+</a>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+<div class="flex flex-col gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-6">
+<span class="material-symbols-outlined text-primary text-3xl">
+                            cast
+                        </span>
+<h3 class="text-neutral-800 text-xl font-bold">Real-time Content Delivery</h3>
+<p class="text-neutral-600 text-sm">Build robust, low-latency streaming infrastructure and content delivery networks that scale to millions of concurrent users.</p>
+<div class="flex flex-wrap gap-2 mt-auto pt-4">
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">Kafka</span>
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">AWS MediaServices</span>
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">Reactive Programming</span>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-6">
+<span class="material-symbols-outlined text-primary text-3xl">
+                            dynamic_feed
+                        </span>
+<h3 class="text-neutral-800 text-xl font-bold">Scalable Content Management</h3>
+<p class="text-neutral-600 text-sm">Develop headless CMS and digital asset management systems designed for high-throughput and global distribution.</p>
+<div class="flex flex-wrap gap-2 mt-auto pt-4">
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">Java Spring</span>
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">Quarkus</span>
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">React</span>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-6">
+<span class="material-symbols-outlined text-primary text-3xl">
+                            monitoring
+                        </span>
+<h3 class="text-neutral-800 text-xl font-bold">User Engagement Analytics</h3>
+<p class="text-neutral-600 text-sm">Implement real-time analytics platforms to track user behavior, personalize content, and increase engagement.</p>
+<div class="flex flex-wrap gap-2 mt-auto pt-4">
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">AI/ML</span>
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">GCP BigQuery</span>
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">Pulsar</span>
+</div>
+</div>
+<div class="flex flex-col gap-4 rounded-lg border border-neutral-200 bg-neutral-50 p-6">
+<span class="material-symbols-outlined text-primary text-3xl">
+                            captive_portal
+                        </span>
+<h3 class="text-neutral-800 text-xl font-bold">Interactive User Experiences</h3>
+<p class="text-neutral-600 text-sm">Crafting dynamic front-end applications for media consumption, from video players to interactive news feeds.</p>
+<div class="flex flex-wrap gap-2 mt-auto pt-4">
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">React</span>
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">Angular</span>
+<span class="text-xs font-medium bg-primary/10 text-primary px-2 py-1 rounded-full">Flutter</span>
+</div>
+</div>
+</div>
+<div class="mt-12 md:mt-24 p-4">
+<h2 class="text-center text-neutral-800 text-[22px] font-bold leading-tight tracking-[-0.015em] pb-8">Core Technical Expertise</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+<div class="flex flex-col items-center gap-3">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">
+                                    smart_toy
+                                </span>
+</div>
+<h3 class="text-neutral-800 text-lg font-bold">AI &amp; Machine Learning</h3>
+<p class="text-neutral-600 text-sm">From recommendation engines to predictive analytics, we leverage AI to create intelligent, automated systems that drive business value.</p>
+</div>
+<div class="flex flex-col items-center gap-3">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">
+                                    bolt
+                                </span>
+</div>
+<h3 class="text-neutral-800 text-lg font-bold">Reactive Architecture</h3>
+<p class="text-neutral-600 text-sm">We build responsive, resilient, and elastic systems using reactive principles to handle high loads and ensure maximum uptime.</p>
+</div>
+<div class="flex flex-col items-center gap-3">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">
+                                    waves
+                                </span>
+</div>
+<h3 class="text-neutral-800 text-lg font-bold">Event-Driven Systems</h3>
+<p class="text-neutral-600 text-sm">Specializing in Kafka and Pulsar, we design event-driven architectures that enable real-time data processing and decoupled microservices.</p>
+</div>
+</div>
+</div>
+<div class="mt-12 md:mt-24 p-4">
+<h3 class="text-center text-neutral-500 text-sm font-semibold tracking-wider uppercase mb-8">Technologies We Master</h3>
+<div class="flex flex-wrap items-center justify-center gap-x-8 md:gap-x-12 gap-y-6 text-neutral-400">
+<img class="h-8 opacity-70" data-alt="Java logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD98wEc-zE6XWLniAQXBwbvJsGsHWV3CFzbr9LcC9Oize9tn1e5c-tjGjaP7p91qvk6QQdfWgS1Lc8eSFuXK3grS3YAJCkAYGSGpXuanL-CR-vllJbOS18iQq_J_fsyCGw87MBWoD48feLu89dg1WUlhnRkbKPHkfszq-TYuCc7h4VlpGGRh2BEzJElOdk36PC32XPM0ZfRvZgCyztYGWqo4e8_tD09ogcQGTcU7pZOmzB9Mpq23-ZEhOUz31I4WGz2MJpdX2Auttx4"/>
+<img class="h-8 opacity-70" data-alt="Spring logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACeOuQ5MTQR1b5NvBT8ECmNvHgu3SZ_qH2XHMh1Y2yM5Mp2TD8XUeV_H5F3ASsSS89teWWFQ_ycKmp_BLQFDxQVOBdU36-7mcNscLUcIB67MrKB2QDGYrmNly0ybCNNxG0kf_-kV-wySXLYQ_yS7bGWMogIhK9L4ib7VTkYU8LRs4M74RWK2rUkFm35Q-lzgB8LCJQtWvLByCJJtV7EPWx_iXe5I_xpzSz5OxB5nPwbJI0um-F-HSTFNDcnxzmhD29xQx3FzJH8SPR"/>
+<img class="h-8 opacity-70" data-alt="React logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsez-VzmhEB61njCv0vc8gtegXtGsAu_3AdT87oavr2CcFYh7HvHJvjvlD0Qcn2Wps7nmsyEbL_1zPDHFuy-GoJHdDZqbHpRtyZts-bqWmQQ4TVXCIBUep6slmP551TTyAMKInVTXHHG2Jud1CuubCUcnyXsv6r2t0omDFin3Tx9BaJozwZJ1OUqXvOCMobzQvtVLuvQbAddHn690dfc5agSxoPI7IeN8rmQMRHF4JMaMiwVZcsrMezTTQL8N0wC0riNFqDt30u5Nz"/>
+<img class="h-8 opacity-70" data-alt="Angular logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDY-Kk-hz5G_UqNVlGyKPumiRXqo9F5mZWXJAjGOgpmt1s_hzOKvESlzXlpn97gUWTSeR82DO-qltA1xs61a3ylXRYdz0qOvYJGaUfvMbbLlKvEwDeUk-GA-stRO4pPe-cbldLSMSpCg020BvopNtByF2B08jyNdxkV6OcIdzQZBpYermKWimPpsiM6EgtHaRW6yvD1x3zoBNvF0YQX2t1wmyCawvZwew2mJFcTa55RpxqkblW_L9XHEO0doBdX_CNGTEgpW_SvoXh-"/>
+<img class="h-8 opacity-70" data-alt="Flutter logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_mi0CBif1TGRlngzA_Ux0_27vWy4UTNQmh_uIl4xeYT-1-vWUeoibNZgT8-doFuCU4lFzthA527CMa34pk2mg7kZIogfcqrPrQ3-xdhbBfyZnSqjclK28zwdaKjN68lNFE9gZal-p6YY4PJGeVEsaIWh4ft7op8qArZz6eapqFNSkvcdeKXcj5uIzGb_x_ekW1gLOxFDuGvr33xYBzeBV93xI1HxWtvCTC-yQwRgIGMAey2ldFnzXZGCO3Iqmro_1XtpuQW6lj4yt"/>
+<img class="h-8 opacity-70" data-alt="AWS logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvL8y4iqlXMHQZY1jadWTe1NiySH5AzTpp9novNPhlCNke6L_hbnEOtKGSMQAuWYow3wuw2LBW0LaUFfF1xv2SevIEzht4sHgIH-eS4tV5Fxv39dr8Qf7FqtnnGCLn5U2dfM98KlvoZd18e4dVTDasltTN1i85gSySdGRcrEKP1avVil2qK3M84b68PRyZhzEGulvCl9NWfXCH8K9XvFaH7LIcpjdN8qU9Zl7SS3FkafI47BybRs9uejQELo28_9OgArRfaS0CKFHM"/>
+<img class="h-8 opacity-70" data-alt="Azure logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBn_ZFwyD5AVP0zf9Wdw3dXH3u3KjLb0zenUtqDRyFGteM27yZMZTeUrmerocY-FuzQgyhHlhug3lkGOdgPOw_vGSw-_NzpSe0Q6S_2gTsq_Hhsm_FeIsVsJojWTcAB8JtPS_oiJjbgIKJezRr2NQzGAnUJhRabTaxLEKYZNaON3pn1fwmteDSdYAaPikQud0hrIIMy0P4Dx1pianUvX5Xr4gvbYSiptu2iniE0Y7MvTBkuX8gY6Lrq9DmsfxfIse3hDcImQ7p2AoQ6"/>
+<img class="h-8 opacity-70" data-alt="GCP logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQM25caArSDZZkQGR_nDh6nDEHo-NeEvmDKDqYWnJubICaplEQg3j_0Jm7Dd_o6hYMmF8by4lI4LyKk5fYvFzJjeJqDWCYF2xDiVXhHotXfeOQcEbsglS-SIZoSm-t2YnXd2oyG7O_Bt-P3zH8mUhQanZp2ohz5AI3eMhJSNIsj_JmUY1lV_2lcRT_Vbt5kOIveIOMtlvQbgtdshr8l0W1sJXhx5S6aEhvN56Kt1wMnm625eIwnov1E-7-hrMCWUOtmey25VvyRRpd"/>
+</div>
+</div>
+<div class="mt-16 md:mt-24 rounded-lg bg-primary text-white p-8 md:p-12 text-center">
+<h2 class="text-3xl md:text-4xl font-bold">Have a Project in Mind?</h2>
+<p class="mt-4 max-w-xl mx-auto text-white/80">Let's discuss how we can leverage our expertise to build a high-performance solution for your business. Schedule a free, no-obligation technical consultation today.</p>
+<button class="mt-8 flex mx-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white text-primary text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Get in Touch</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>
