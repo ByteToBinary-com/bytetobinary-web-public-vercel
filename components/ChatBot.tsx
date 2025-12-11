@@ -79,45 +79,30 @@ export default function ChatBot() {
       setContactData((prev) => ({ ...prev, query: inputValue }));
       
       setTimeout(() => {
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: 'Thank you for your inquiry! To assist you better, could you please provide your full name?',
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, botMessage]);
-        setChatStage('contact_name');
-        setIsLoading(false);
+        addBotMessage(
+          'Thank you for your inquiry! To assist you better, could you please provide your full name?',
+          'contact_name'
+        );
       }, 500);
     } else if (chatStage === 'contact_name') {
       // User entered their name
       setContactData((prev) => ({ ...prev, name: inputValue }));
       
       setTimeout(() => {
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: `Nice to meet you, ${inputValue}! What is your email address?`,
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, botMessage]);
-        setChatStage('contact_email');
-        setIsLoading(false);
+        addBotMessage(
+          `Nice to meet you, ${inputValue}! What is your email address?`,
+          'contact_email'
+        );
       }, 500);
     } else if (chatStage === 'contact_email') {
       // User entered their email
       setContactData((prev) => ({ ...prev, email: inputValue }));
       
       setTimeout(() => {
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: 'Great! And what is your phone number?',
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, botMessage]);
-        setChatStage('contact_phone');
-        setIsLoading(false);
+        addBotMessage(
+          'Great! And what is your phone number?',
+          'contact_phone'
+        );
       }, 500);
     } else if (chatStage === 'contact_phone') {
       // User entered phone, save to database
@@ -138,15 +123,10 @@ export default function ChatBot() {
         });
 
         if (response.ok) {
-          const botMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            text: `Perfect! Thank you ${contactData.name}. We've received your information and will get back to you at ${contactData.email} shortly. Our team will review your inquiry and contact you soon!`,
-            sender: 'bot',
-            timestamp: new Date(),
-          };
-          setMessages((prev) => [...prev, botMessage]);
-          setChatStage('complete');
-          setIsLoading(false);
+          addBotMessage(
+            `Perfect! Thank you ${contactData.name}. We've received your information and will get back to you at ${contactData.email} shortly. Our team will review your inquiry and contact you soon!`,
+            'complete'
+          );
         } else {
           throw new Error('Failed to save contact');
         }
@@ -171,6 +151,19 @@ export default function ChatBot() {
   };
 
   const isInputDisabled = isLoading || chatStage === 'complete';
+
+  // Helper function to add bot message and update state
+  const addBotMessage = (text: string, nextStage: ChatStage) => {
+    const botMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      text,
+      sender: 'bot',
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, botMessage]);
+    setChatStage(nextStage);
+    setIsLoading(false);
+  };
 
   return (
     <>
