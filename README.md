@@ -20,6 +20,27 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Environment Setup
+
+This project requires the following environment variables. Copy `.env.example` to `.env.local` and fill in the values:
+
+- `DATABASE_URL`: PostgreSQL database connection string
+- `UPSTASH_REDIS_REST_URL`: Upstash Redis REST URL for rate limiting (get from [Upstash Console](https://console.upstash.com/))
+- `UPSTASH_REDIS_REST_TOKEN`: Upstash Redis REST token for rate limiting
+
+### Rate Limiting
+
+The contact form API (`/api/contact`) implements rate limiting to prevent spam and abuse:
+
+- **Limit**: 5 requests per 60 seconds per IP address
+- **Algorithm**: Sliding window
+- **Headers**: All responses include rate limit information via HTTP headers:
+  - `X-RateLimit-Limit`: Maximum requests allowed in the window
+  - `X-RateLimit-Remaining`: Remaining requests in the current window
+  - `X-RateLimit-Reset`: Timestamp when the rate limit resets
+
+When rate limit is exceeded, the API returns HTTP 429 (Too Many Requests) with a JSON response indicating when the limit resets.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
