@@ -21,10 +21,13 @@ const sanitizeInput = (input: string): string => {
   return div.innerHTML;
 };
 
-// Email validation regex
+// Email validation using HTML5 pattern
 const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  // Use browser's native email validation
+  const input = document.createElement('input');
+  input.type = 'email';
+  input.value = email;
+  return input.checkValidity();
 };
 
 export default function ChatBot() {
@@ -39,6 +42,7 @@ export default function ChatBot() {
     email: '',
     phone: '',
   });
+  const [validationError, setValidationError] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -99,24 +103,25 @@ export default function ChatBot() {
     if (!inputValue.trim()) return;
 
     const trimmedInput = inputValue.trim();
+    setValidationError('');
 
     // Validate input length based on stage
     if (chatStage === 'query' && trimmedInput.length > 2000) {
-      alert('Your message is too long. Please keep it under 2000 characters.');
+      setValidationError('Your message is too long. Please keep it under 2000 characters.');
       return;
     }
     if (chatStage === 'contact_name' && trimmedInput.length > 100) {
-      alert('Name is too long. Please keep it under 100 characters.');
+      setValidationError('Name is too long. Please keep it under 100 characters.');
       return;
     }
     if (chatStage === 'contact_email' && trimmedInput.length > 254) {
-      alert('Email is too long. Please keep it under 254 characters.');
+      setValidationError('Email is too long. Please keep it under 254 characters.');
       return;
     }
 
     // Validate email format
     if (chatStage === 'contact_email' && !isValidEmail(trimmedInput)) {
-      alert('Please enter a valid email address.');
+      setValidationError('Please enter a valid email address.');
       return;
     }
 
@@ -144,9 +149,9 @@ export default function ChatBot() {
         );
       }, 500);
     } else if (chatStage === 'contact_name') {
-      // User entered their name
+      // User entered their name - store sanitized version
       const sanitizedName = sanitizeInput(trimmedInput);
-      setContactData((prev) => ({ ...prev, name: trimmedInput }));
+      setContactData((prev) => ({ ...prev, name: sanitizedName }));
       
       timeoutRef.current = setTimeout(() => {
         addBotMessage(
@@ -183,10 +188,9 @@ export default function ChatBot() {
         });
 
         if (response.ok) {
-          const sanitizedName = sanitizeInput(contactData.name);
           const sanitizedEmail = sanitizeInput(contactData.email);
           addBotMessage(
-            `Perfect! Thank you ${sanitizedName}. We've received your information and will get back to you at ${sanitizedEmail} shortly. Our team will review your inquiry and contact you soon!`,
+            `Perfect! Thank you ${contactData.name}. We've received your information and will get back to you at ${sanitizedEmail} shortly. Our team will review your inquiry and contact you soon!`,
             'complete'
           );
         } else {
@@ -337,49 +341,67 @@ export default function ChatBot() {
                 Start New Chat
               </button>
             ) : (
-              <form onSubmit={handleSendMessage} className="flex gap-2">
-                <input
-                  ref={inputRef}
-                  type={chatStage === 'contact_email' ? 'email' : 'text'}
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  maxLength={
-                    chatStage === 'query' ? 2000
-                    : chatStage === 'contact_name' ? 100
-                    : chatStage === 'contact_email' ? 254
-                    : undefined
-                  }
-                  placeholder={
-                    chatStage === 'query'
-                      ? 'Describe your inquiry...'
-                      : chatStage === 'contact_name'
-                      ? 'Enter your name...'
-                      : chatStage === 'contact_email'
-                      ? 'Enter your email...'
-                      : 'Enter your phone...'
-                  }
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-transparent text-sm"
-                  disabled={isInputDisabled}
-                />
-                <button
-                  type="submit"
-                  disabled={isInputDisabled || !inputValue.trim()}
-                  className="px-4 py-2 bg-[var(--accent-blue)] text-white rounded-lg hover:bg-[var(--accent-blue)]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-semibold"
-                  aria-label={
-                    chatStage === 'query'
-                      ? 'Send inquiry'
-                      : chatStage === 'contact_name'
-                      ? 'Send name'
-                      : chatStage === 'contact_email'
-                      ? 'Send email'
-                      : chatStage === 'contact_phone'
-                      ? 'Send phone number'
-                      : 'Send message'
-                  }
-                >
-                  Send
-                </button>
-              </form>
+              <>
+                <form onSubmit={handleSendMessage} className="flex gap-2">
+                  <input
+                    ref={inputRef}
+                    type={
+                      chatStage === 'contact_email' ? 'email'
+                      : chatStage === 'contact_phone' ? 'tel'
+                      : 'text'
+                    }
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    maxLength={
+                      chatStage === 'query' ? 2000
+                      : chatStage === 'contact_name' ? 100
+                      : chatStage === 'contact_email' ? 254
+                      : undefined
+                    }
+                    placeholder={
+                      chatStage === 'query'
+                        ? 'Describe your inquiry...'
+                        : chatStage === 'contact_name'
+                        ? 'Enter your name...'
+                        : chatStage === 'contact_email'
+                        ? 'Enter your email...'
+                        : 'Enter your phone...'
+                    }
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] focus:border-transparent text-sm"
+                    disabled={isInputDisabled}
+                    aria-invalid={validationError ? 'true' : 'false'}
+                    aria-describedby={validationError ? 'validation-error' : undefined}
+                  />
+                  <button
+                    type="submit"
+                    disabled={isInputDisabled || !inputValue.trim()}
+                    className="px-4 py-2 bg-[var(--accent-blue)] text-white rounded-lg hover:bg-[var(--accent-blue)]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-semibold"
+                    aria-label={
+                      chatStage === 'query'
+                        ? 'Send inquiry'
+                        : chatStage === 'contact_name'
+                        ? 'Send name'
+                        : chatStage === 'contact_email'
+                        ? 'Send email'
+                        : chatStage === 'contact_phone'
+                        ? 'Send phone number'
+                        : 'Send message'
+                    }
+                  >
+                    Send
+                  </button>
+                </form>
+                {validationError && (
+                  <p 
+                    id="validation-error" 
+                    className="text-red-600 text-xs mt-2"
+                    role="alert"
+                    aria-live="polite"
+                  >
+                    {validationError}
+                  </p>
+                )}
+              </>
             )}
           </div>
         </div>
