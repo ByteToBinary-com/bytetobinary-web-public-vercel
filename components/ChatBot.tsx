@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { RiChat3Line } from 'react-icons/ri';
 import { MdHeadset, MdCheckCircle } from 'react-icons/md';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 interface Message {
   id: string;
@@ -64,7 +65,7 @@ export default function ChatBot() {
     // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue,
+      text: sanitizeHtml(inputValue),
       sender: 'user',
       timestamp: new Date(),
     };
@@ -96,7 +97,7 @@ export default function ChatBot() {
       setTimeout(() => {
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: `Nice to meet you, ${inputValue}! What is your email address?`,
+          text: `Nice to meet you, ${sanitizeHtml(inputValue)}! What is your email address?`,
           sender: 'bot',
           timestamp: new Date(),
         };
@@ -140,7 +141,7 @@ export default function ChatBot() {
         if (response.ok) {
           const botMessage: Message = {
             id: (Date.now() + 1).toString(),
-            text: `Perfect! Thank you ${contactData.name}. We've received your information and will get back to you at ${contactData.email} shortly. Our team will review your inquiry and contact you soon!`,
+            text: `Perfect! Thank you ${sanitizeHtml(contactData.name)}. We've received your information and will get back to you at ${sanitizeHtml(contactData.email)} shortly. Our team will review your inquiry and contact you soon!`,
             sender: 'bot',
             timestamp: new Date(),
           };
