@@ -32,7 +32,6 @@ export default function ChatBot() {
 
   // Track mounted state
   useEffect(() => {
-    isMountedRef.current = true;
     return () => {
       isMountedRef.current = false;
     };
@@ -66,6 +65,7 @@ export default function ChatBot() {
 
       return () => clearTimeout(timeoutId);
     }
+    return undefined;
   }, [messages, isLoading, isOpen, chatStage]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
