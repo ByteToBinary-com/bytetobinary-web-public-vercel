@@ -257,11 +257,9 @@ export default function ChatBot() {
           </div>
 
           {/* Screen reader announcement for new bot messages */}
-          {latestBotMessage && (
-            <div role="status" aria-live="polite" className="sr-only">
-              {latestBotMessage}
-            </div>
-          )}
+          <div role="status" aria-live="polite" className="sr-only">
+            {latestBotMessage}
+          </div>
 
           {/* Input Area */}
           <div className="border-t border-gray-200 p-4 bg-white">
