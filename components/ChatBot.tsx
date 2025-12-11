@@ -151,28 +151,33 @@ export default function ChatBot() {
           // Parse error response to provide specific feedback
           let errorText = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
           
-          try {
-            const errorData = await response.json();
-            
-            if (response.status === 429) {
-              // Rate limiting error
-              errorText = 'You\'ve sent too many requests. Please wait a moment and try again.';
-            } else if (response.status === 400) {
-              // Validation error
-              if (errorData.error && errorData.error.includes('Missing required fields')) {
-                errorText = 'Some required information is missing. Please make sure you\'ve provided your name, email, and inquiry.';
-              } else if (errorData.error && errorData.error.includes('Field length exceeded')) {
-                errorText = 'Some of your information is too long. Please use shorter text and try again.';
-              } else {
-                errorText = 'The information provided is invalid. Please check your details and try again.';
+          // Determine error type based on status code
+          if (response.status === 429) {
+            // Rate limiting error
+            errorText = 'You\'ve sent too many requests. Please wait a moment and try again.';
+          } else if (response.status === 400) {
+            // Validation error - try to get more details from response
+            try {
+              const contentType = response.headers.get('content-type');
+              if (contentType && contentType.includes('application/json')) {
+                const errorData = await response.json();
+                if (errorData.error) {
+                  if (errorData.error.includes('Missing required fields')) {
+                    errorText = 'Some required information is missing. Please make sure you\'ve provided your name, email, and inquiry.';
+                  } else if (errorData.error.includes('Field length exceeded')) {
+                    errorText = 'Some of your information is too long. Please use shorter text and try again.';
+                  } else {
+                    errorText = 'The information provided is invalid. Please check your details and try again.';
+                  }
+                }
               }
-            } else if (response.status === 500) {
-              // Server error
-              errorText = 'Our system is experiencing issues. Please try again in a few moments or use our contact form.';
+            } catch (parseError) {
+              // If parsing fails, use generic validation error message
+              errorText = 'The information provided is invalid. Please check your details and try again.';
             }
-          } catch (parseError) {
-            // If parsing fails, use default error message
-            console.error('Error parsing response:', parseError);
+          } else if (response.status === 500) {
+            // Server error
+            errorText = 'Our system is experiencing issues. Please try again in a few moments or use our contact form.';
           }
           
           const errorMessage: Message = {
