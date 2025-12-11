@@ -4,6 +4,10 @@
  * @returns Sanitized string with HTML entities escaped
  */
 export function sanitizeHtml(str: string): string {
+  if (!str || typeof str !== 'string') {
+    return '';
+  }
+  
   const htmlEntities: Record<string, string> = {
     '&': '&amp;',
     '<': '&lt;',
