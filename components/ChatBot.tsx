@@ -170,11 +170,12 @@ export default function ChatBot() {
       } catch (error) {
         let errorText = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
         
-        // Check if it's a network error
-        if (error instanceof TypeError && error.message.includes('fetch')) {
+        // Check if it's a network error (TypeError thrown by fetch indicates network issues)
+        if (error instanceof TypeError) {
           errorText = 'Network error. Please check your internet connection and try again.';
-        } else if (error instanceof Error && error.message !== 'Failed to save contact') {
+        } else if (error instanceof Error) {
           // Use the specific error message if it was thrown from the response handling above
+          // This includes our custom error messages for different HTTP status codes
           errorText = error.message;
         }
         
