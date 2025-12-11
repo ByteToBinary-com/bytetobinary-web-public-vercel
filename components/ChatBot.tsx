@@ -14,6 +14,19 @@ interface Message {
 
 type ChatStage = 'greeting' | 'query' | 'contact_name' | 'contact_email' | 'contact_phone' | 'complete';
 
+// Helper function to sanitize user input to prevent XSS
+const sanitizeInput = (input: string): string => {
+  const div = document.createElement('div');
+  div.textContent = input;
+  return div.innerHTML;
+};
+
+// Email validation regex
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -28,6 +41,7 @@ export default function ChatBot() {
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Initialize with welcome message
   useEffect(() => {
@@ -43,17 +57,40 @@ export default function ChatBot() {
     }
   }, [isOpen, messages]);
 
+  // Helper function to add bot message
+  const addBotMessage = (text: string, nextStage: ChatStage) => {
+    const botMessage: Message = {
+      id: crypto.randomUUID(),
+      text,
+      sender: 'bot',
+      timestamp: new Date(),
+    };
+    setMessages((prev) => [...prev, botMessage]);
+    setChatStage(nextStage);
+    setIsLoading(false);
+  };
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   // Auto-scroll to latest message
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     // Focus and select input after bot replies
     if (isOpen && !isLoading && chatStage !== 'complete') {
-      setTimeout(() => {
+      const focusTimeout = setTimeout(() => {
         if (inputRef.current) {
           inputRef.current.focus();
           inputRef.current.select();
         }
       }, 100);
+      return () => clearTimeout(focusTimeout);
     }
   }, [messages, isLoading, isOpen, chatStage]);
 
@@ -61,10 +98,32 @@ export default function ChatBot() {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
+    const trimmedInput = inputValue.trim();
+
+    // Validate input length based on stage
+    if (chatStage === 'query' && trimmedInput.length > 2000) {
+      alert('Your message is too long. Please keep it under 2000 characters.');
+      return;
+    }
+    if (chatStage === 'contact_name' && trimmedInput.length > 100) {
+      alert('Name is too long. Please keep it under 100 characters.');
+      return;
+    }
+    if (chatStage === 'contact_email' && trimmedInput.length > 254) {
+      alert('Email is too long. Please keep it under 254 characters.');
+      return;
+    }
+
+    // Validate email format
+    if (chatStage === 'contact_email' && !isValidEmail(trimmedInput)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
     // Add user message
     const userMessage: Message = {
-      id: Date.now().toString(),
-      text: inputValue,
+      id: crypto.randomUUID(),
+      text: trimmedInput,
       sender: 'user',
       timestamp: new Date(),
     };
@@ -76,52 +135,38 @@ export default function ChatBot() {
     // Handle different chat stages
     if (chatStage === 'query') {
       // User entered their query
-      setContactData((prev) => ({ ...prev, query: inputValue }));
+      setContactData((prev) => ({ ...prev, query: trimmedInput }));
       
-      setTimeout(() => {
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: 'Thank you for your inquiry! To assist you better, could you please provide your full name?',
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, botMessage]);
-        setChatStage('contact_name');
-        setIsLoading(false);
+      timeoutRef.current = setTimeout(() => {
+        addBotMessage(
+          'Thank you for your inquiry! To assist you better, could you please provide your full name?',
+          'contact_name'
+        );
       }, 500);
     } else if (chatStage === 'contact_name') {
       // User entered their name
-      setContactData((prev) => ({ ...prev, name: inputValue }));
+      const sanitizedName = sanitizeInput(trimmedInput);
+      setContactData((prev) => ({ ...prev, name: trimmedInput }));
       
-      setTimeout(() => {
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: `Nice to meet you, ${inputValue}! What is your email address?`,
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, botMessage]);
-        setChatStage('contact_email');
-        setIsLoading(false);
+      timeoutRef.current = setTimeout(() => {
+        addBotMessage(
+          `Nice to meet you, ${sanitizedName}! What is your email address?`,
+          'contact_email'
+        );
       }, 500);
     } else if (chatStage === 'contact_email') {
       // User entered their email
-      setContactData((prev) => ({ ...prev, email: inputValue }));
+      setContactData((prev) => ({ ...prev, email: trimmedInput }));
       
-      setTimeout(() => {
-        const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: 'Great! And what is your phone number?',
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, botMessage]);
-        setChatStage('contact_phone');
-        setIsLoading(false);
+      timeoutRef.current = setTimeout(() => {
+        addBotMessage(
+          'Great! And what is your phone number?',
+          'contact_phone'
+        );
       }, 500);
     } else if (chatStage === 'contact_phone') {
       // User entered phone, save to database
-      setContactData((prev) => ({ ...prev, phone: inputValue }));
+      setContactData((prev) => ({ ...prev, phone: trimmedInput }));
       
       try {
         const response = await fetch('/api/contact', {
@@ -133,31 +178,54 @@ export default function ChatBot() {
             name: contactData.name,
             email: contactData.email,
             message: contactData.query,
-            phone: inputValue,
+            phone: trimmedInput,
           }),
         });
 
         if (response.ok) {
-          const botMessage: Message = {
-            id: (Date.now() + 1).toString(),
-            text: `Perfect! Thank you ${contactData.name}. We've received your information and will get back to you at ${contactData.email} shortly. Our team will review your inquiry and contact you soon!`,
+          const sanitizedName = sanitizeInput(contactData.name);
+          const sanitizedEmail = sanitizeInput(contactData.email);
+          addBotMessage(
+            `Perfect! Thank you ${sanitizedName}. We've received your information and will get back to you at ${sanitizedEmail} shortly. Our team will review your inquiry and contact you soon!`,
+            'complete'
+          );
+        } else {
+          // Parse error response for specific feedback
+          let errorMessage = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
+          try {
+            const errorData = await response.json();
+            if (response.status === 400) {
+              errorMessage = 'Invalid data provided. Please check your information and try again.';
+            } else if (response.status === 429) {
+              errorMessage = 'Too many requests. Please wait a moment and try again.';
+            } else if (errorData.error) {
+              errorMessage = `Error: ${errorData.error}`;
+            }
+          } catch {
+            // Use default error message if parsing fails
+          }
+          
+          console.error('API error:', response.status, response.statusText);
+          
+          const errorMsg: Message = {
+            id: crypto.randomUUID(),
+            text: errorMessage,
             sender: 'bot',
             timestamp: new Date(),
           };
-          setMessages((prev) => [...prev, botMessage]);
-          setChatStage('complete');
-          setIsLoading(false);
-        } else {
-          throw new Error('Failed to save contact');
+          setMessages((prev) => [...prev, errorMsg]);
         }
       } catch (error) {
+        console.error('Network error submitting contact form:', error);
+        
         const errorMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: 'Sorry, there was an error saving your information. Please try again or use our contact form.',
+          id: crypto.randomUUID(),
+          text: 'Network error. Please check your internet connection and try again.',
           sender: 'bot',
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, errorMessage]);
+      } finally {
         setIsLoading(false);
       }
     }
@@ -187,13 +255,18 @@ export default function ChatBot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-8 right-8 z-40 w-80 h-96 bg-white rounded-lg shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4">
+        <div 
+          className="fixed bottom-8 right-8 z-40 w-80 h-96 bg-white rounded-lg shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="chat-title"
+        >
           {/* Header */}
           <div className="bg-gradient-to-r from-[var(--accent-blue)] to-blue-600 text-white p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <MdHeadset size={28} />
               <div>
-                <h3 className="font-bold text-lg">Chat with us</h3>
+                <h3 id="chat-title" className="font-bold text-lg">Chat with us</h3>
                 <div className="flex items-center gap-1 text-xs text-blue-100">
                   <MdCheckCircle size={14} />
                   <p>We typically reply within minutes</p>
@@ -210,7 +283,12 @@ export default function ChatBot() {
           </div>
 
           {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-4">
+          <div 
+            className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-4"
+            aria-live="polite"
+            role="log"
+            aria-label="Chat messages"
+          >
             {messages.map((message) => (
               <div
                 key={message.id}
@@ -262,9 +340,15 @@ export default function ChatBot() {
               <form onSubmit={handleSendMessage} className="flex gap-2">
                 <input
                   ref={inputRef}
-                  type="text"
+                  type={chatStage === 'contact_email' ? 'email' : 'text'}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
+                  maxLength={
+                    chatStage === 'query' ? 2000
+                    : chatStage === 'contact_name' ? 100
+                    : chatStage === 'contact_email' ? 254
+                    : undefined
+                  }
                   placeholder={
                     chatStage === 'query'
                       ? 'Describe your inquiry...'
