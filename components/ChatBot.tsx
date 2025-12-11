@@ -28,6 +28,15 @@ export default function ChatBot() {
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isMountedRef = useRef(true);
+
+  // Track mounted state
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   // Initialize with welcome message
   useEffect(() => {
@@ -48,12 +57,14 @@ export default function ChatBot() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     // Focus and select input after bot replies
     if (isOpen && !isLoading && chatStage !== 'complete') {
-      setTimeout(() => {
-        if (inputRef.current) {
+      const timeoutId = setTimeout(() => {
+        if (isMountedRef.current && inputRef.current) {
           inputRef.current.focus();
           inputRef.current.select();
         }
       }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
   }, [messages, isLoading, isOpen, chatStage]);
 
@@ -79,6 +90,7 @@ export default function ChatBot() {
       setContactData((prev) => ({ ...prev, query: inputValue }));
       
       setTimeout(() => {
+        if (!isMountedRef.current) return;
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
           text: 'Thank you for your inquiry! To assist you better, could you please provide your full name?',
@@ -94,6 +106,7 @@ export default function ChatBot() {
       setContactData((prev) => ({ ...prev, name: inputValue }));
       
       setTimeout(() => {
+        if (!isMountedRef.current) return;
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
           text: `Nice to meet you, ${inputValue}! What is your email address?`,
@@ -109,6 +122,7 @@ export default function ChatBot() {
       setContactData((prev) => ({ ...prev, email: inputValue }));
       
       setTimeout(() => {
+        if (!isMountedRef.current) return;
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
           text: 'Great! And what is your phone number?',
