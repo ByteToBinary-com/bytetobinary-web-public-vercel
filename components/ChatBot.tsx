@@ -28,6 +28,8 @@ export default function ChatBot() {
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const chatWindowRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   // Initialize with welcome message
   useEffect(() => {
@@ -56,6 +58,50 @@ export default function ChatBot() {
       }, 100);
     }
   }, [messages, isLoading, isOpen, chatStage]);
+
+  // Focus trap - handle keyboard events
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        return;
+      }
+
+      if (e.key === 'Tab' && chatWindowRef.current) {
+        const focusableElements = chatWindowRef.current.querySelectorAll<HTMLElement>(
+          'button, input, [tabindex]:not([tabindex="-1"])'
+        );
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          // Shift + Tab
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          // Tab
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
+  // Set initial focus when dialog opens
+  useEffect(() => {
+    if (isOpen && closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+  }, [isOpen]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,13 +233,19 @@ export default function ChatBot() {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-8 right-8 z-40 w-80 h-96 bg-white rounded-lg shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4">
+        <div
+          ref={chatWindowRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="chat-dialog-title"
+          className="fixed bottom-8 right-8 z-40 w-80 h-96 bg-white rounded-lg shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4"
+        >
           {/* Header */}
           <div className="bg-gradient-to-r from-[var(--accent-blue)] to-blue-600 text-white p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <MdHeadset size={28} />
               <div>
-                <h3 className="font-bold text-lg">Chat with us</h3>
+                <h3 id="chat-dialog-title" className="font-bold text-lg">Chat with us</h3>
                 <div className="flex items-center gap-1 text-xs text-blue-100">
                   <MdCheckCircle size={14} />
                   <p>We typically reply within minutes</p>
@@ -201,6 +253,7 @@ export default function ChatBot() {
               </div>
             </div>
             <button
+              ref={closeButtonRef}
               onClick={() => setIsOpen(false)}
               className="text-white hover:bg-white/20 p-1 rounded transition-colors"
               aria-label="Close chat"
