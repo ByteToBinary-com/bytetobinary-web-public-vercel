@@ -28,6 +28,19 @@ export default function ChatBot() {
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isMountedRef = useRef(true);
+  const timeoutIdsRef = useRef<NodeJS.Timeout[]>([]);
+
+  // Track component mount state
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      // Clear all pending timeouts on unmount
+      timeoutIdsRef.current.forEach(clearTimeout);
+      timeoutIdsRef.current = [];
+    };
+  }, []);
 
   // Initialize with welcome message
   useEffect(() => {
@@ -48,12 +61,14 @@ export default function ChatBot() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     // Focus and select input after bot replies
     if (isOpen && !isLoading && chatStage !== 'complete') {
-      setTimeout(() => {
-        if (inputRef.current) {
+      const timeoutId = setTimeout(() => {
+        if (isMountedRef.current && inputRef.current) {
           inputRef.current.focus();
           inputRef.current.select();
         }
       }, 100);
+      
+      return () => clearTimeout(timeoutId);
     }
   }, [messages, isLoading, isOpen, chatStage]);
 
@@ -78,7 +93,9 @@ export default function ChatBot() {
       // User entered their query
       setContactData((prev) => ({ ...prev, query: inputValue }));
       
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
+        if (!isMountedRef.current) return;
+        
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
           text: 'Thank you for your inquiry! To assist you better, could you please provide your full name?',
@@ -89,11 +106,15 @@ export default function ChatBot() {
         setChatStage('contact_name');
         setIsLoading(false);
       }, 500);
+      
+      timeoutIdsRef.current.push(timeoutId);
     } else if (chatStage === 'contact_name') {
       // User entered their name
       setContactData((prev) => ({ ...prev, name: inputValue }));
       
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
+        if (!isMountedRef.current) return;
+        
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
           text: `Nice to meet you, ${inputValue}! What is your email address?`,
@@ -104,11 +125,15 @@ export default function ChatBot() {
         setChatStage('contact_email');
         setIsLoading(false);
       }, 500);
+      
+      timeoutIdsRef.current.push(timeoutId);
     } else if (chatStage === 'contact_email') {
       // User entered their email
       setContactData((prev) => ({ ...prev, email: inputValue }));
       
-      setTimeout(() => {
+      const timeoutId = setTimeout(() => {
+        if (!isMountedRef.current) return;
+        
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
           text: 'Great! And what is your phone number?',
@@ -119,6 +144,8 @@ export default function ChatBot() {
         setChatStage('contact_phone');
         setIsLoading(false);
       }, 500);
+      
+      timeoutIdsRef.current.push(timeoutId);
     } else if (chatStage === 'contact_phone') {
       // User entered phone, save to database
       setContactData((prev) => ({ ...prev, phone: inputValue }));
@@ -137,6 +164,8 @@ export default function ChatBot() {
           }),
         });
 
+        if (!isMountedRef.current) return;
+
         if (response.ok) {
           const botMessage: Message = {
             id: (Date.now() + 1).toString(),
@@ -151,6 +180,8 @@ export default function ChatBot() {
           throw new Error('Failed to save contact');
         }
       } catch (error) {
+        if (!isMountedRef.current) return;
+        
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
           text: 'Sorry, there was an error saving your information. Please try again or use our contact form.',
