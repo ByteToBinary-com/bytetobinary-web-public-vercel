@@ -151,6 +151,7 @@ export default function ChatBot() {
           throw new Error('Failed to save contact');
         }
       } catch (error) {
+        console.error('Error saving contact information:', error);
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
           text: 'Sorry, there was an error saving your information. Please try again or use our contact form.',
