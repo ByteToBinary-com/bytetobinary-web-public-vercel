@@ -16,8 +16,10 @@ type ChatStage = 'greeting' | 'query' | 'contact_name' | 'contact_email' | 'cont
 
 // Sanitize user input to prevent XSS attacks
 function sanitizeInput(input: string): string {
-  // Remove HTML tags and special characters that could be used for XSS
+  // Escape HTML special characters that could be used for XSS
+  // Note: Ampersand must be escaped first to prevent double-encoding
   return input
+    .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
@@ -107,7 +109,7 @@ export default function ChatBot() {
       setTimeout(() => {
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: `Nice to meet you, ${sanitizeInput(inputValue)}! What is your email address?`,
+          text: `Nice to meet you, ${inputValue}! What is your email address?`,
           sender: 'bot',
           timestamp: new Date(),
         };
@@ -151,7 +153,7 @@ export default function ChatBot() {
         if (response.ok) {
           const botMessage: Message = {
             id: (Date.now() + 1).toString(),
-            text: `Perfect! Thank you ${sanitizeInput(contactData.name)}. We've received your information and will get back to you at ${sanitizeInput(contactData.email)} shortly. Our team will review your inquiry and contact you soon!`,
+            text: `Perfect! Thank you ${contactData.name}. We've received your information and will get back to you at ${contactData.email} shortly. Our team will review your inquiry and contact you soon!`,
             sender: 'bot',
             timestamp: new Date(),
           };
