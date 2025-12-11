@@ -105,6 +105,9 @@ export default function ChatBot() {
         setMessages((prev) => [...prev, botMessage]);
         setChatStage('contact_name');
         setIsLoading(false);
+        
+        // Remove completed timeout from tracking array
+        timeoutIdsRef.current = timeoutIdsRef.current.filter(id => id !== timeoutId);
       }, 500);
       
       timeoutIdsRef.current.push(timeoutId);
@@ -124,6 +127,9 @@ export default function ChatBot() {
         setMessages((prev) => [...prev, botMessage]);
         setChatStage('contact_email');
         setIsLoading(false);
+        
+        // Remove completed timeout from tracking array
+        timeoutIdsRef.current = timeoutIdsRef.current.filter(id => id !== timeoutId);
       }, 500);
       
       timeoutIdsRef.current.push(timeoutId);
@@ -143,6 +149,9 @@ export default function ChatBot() {
         setMessages((prev) => [...prev, botMessage]);
         setChatStage('contact_phone');
         setIsLoading(false);
+        
+        // Remove completed timeout from tracking array
+        timeoutIdsRef.current = timeoutIdsRef.current.filter(id => id !== timeoutId);
       }, 500);
       
       timeoutIdsRef.current.push(timeoutId);
