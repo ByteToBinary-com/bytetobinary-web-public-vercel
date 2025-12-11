@@ -74,10 +74,13 @@ export default function ChatBot() {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
+    // Sanitize input once and reuse the sanitized value
+    const sanitizedInput = sanitizeInput(inputValue);
+
     // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: sanitizeInput(inputValue),
+      text: sanitizedInput,
       sender: 'user',
       timestamp: new Date(),
     };
@@ -89,7 +92,7 @@ export default function ChatBot() {
     // Handle different chat stages
     if (chatStage === 'query') {
       // User entered their query
-      setContactData((prev) => ({ ...prev, query: sanitizeInput(inputValue) }));
+      setContactData((prev) => ({ ...prev, query: sanitizedInput }));
       
       setTimeout(() => {
         const botMessage: Message = {
@@ -104,12 +107,12 @@ export default function ChatBot() {
       }, 500);
     } else if (chatStage === 'contact_name') {
       // User entered their name
-      setContactData((prev) => ({ ...prev, name: sanitizeInput(inputValue) }));
+      setContactData((prev) => ({ ...prev, name: sanitizedInput }));
       
       setTimeout(() => {
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: `Nice to meet you, ${inputValue}! What is your email address?`,
+          text: `Nice to meet you, ${sanitizedInput}! What is your email address?`,
           sender: 'bot',
           timestamp: new Date(),
         };
@@ -119,7 +122,7 @@ export default function ChatBot() {
       }, 500);
     } else if (chatStage === 'contact_email') {
       // User entered their email
-      setContactData((prev) => ({ ...prev, email: sanitizeInput(inputValue) }));
+      setContactData((prev) => ({ ...prev, email: sanitizedInput }));
       
       setTimeout(() => {
         const botMessage: Message = {
@@ -134,7 +137,7 @@ export default function ChatBot() {
       }, 500);
     } else if (chatStage === 'contact_phone') {
       // User entered phone, save to database
-      setContactData((prev) => ({ ...prev, phone: sanitizeInput(inputValue) }));
+      setContactData((prev) => ({ ...prev, phone: sanitizedInput }));
       
       try {
         const response = await fetch('/api/contact', {
@@ -146,7 +149,7 @@ export default function ChatBot() {
             name: contactData.name,
             email: contactData.email,
             message: contactData.query,
-            phone: inputValue,
+            phone: sanitizedInput,
           }),
         });
 
