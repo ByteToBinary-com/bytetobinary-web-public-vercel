@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Validate email format
-    if (!isValidEmail(email)) {
+    if (typeof email !== 'string' || !isValidEmail(email)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
         { status: 400 }
