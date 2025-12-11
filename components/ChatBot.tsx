@@ -28,6 +28,7 @@ export default function ChatBot() {
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [latestBotMessage, setLatestBotMessage] = useState<string>('');
 
   // Initialize with welcome message
   useEffect(() => {
@@ -39,6 +40,7 @@ export default function ChatBot() {
         timestamp: new Date(),
       };
       setMessages([welcomeMessage]);
+      setLatestBotMessage(welcomeMessage.text);
       setChatStage('query');
     }
   }, [isOpen, messages]);
@@ -86,6 +88,7 @@ export default function ChatBot() {
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, botMessage]);
+        setLatestBotMessage(botMessage.text);
         setChatStage('contact_name');
         setIsLoading(false);
       }, 500);
@@ -101,6 +104,7 @@ export default function ChatBot() {
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, botMessage]);
+        setLatestBotMessage(botMessage.text);
         setChatStage('contact_email');
         setIsLoading(false);
       }, 500);
@@ -116,6 +120,7 @@ export default function ChatBot() {
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, botMessage]);
+        setLatestBotMessage(botMessage.text);
         setChatStage('contact_phone');
         setIsLoading(false);
       }, 500);
@@ -145,6 +150,7 @@ export default function ChatBot() {
             timestamp: new Date(),
           };
           setMessages((prev) => [...prev, botMessage]);
+          setLatestBotMessage(botMessage.text);
           setChatStage('complete');
           setIsLoading(false);
         } else {
@@ -158,6 +164,7 @@ export default function ChatBot() {
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, errorMessage]);
+        setLatestBotMessage(errorMessage.text);
         setIsLoading(false);
       }
     }
@@ -248,6 +255,13 @@ export default function ChatBot() {
             )}
             <div ref={messagesEndRef} />
           </div>
+
+          {/* Screen reader announcement for new bot messages */}
+          {latestBotMessage && (
+            <div role="status" aria-live="polite" className="sr-only">
+              {latestBotMessage}
+            </div>
+          )}
 
           {/* Input Area */}
           <div className="border-t border-gray-200 p-4 bg-white">
