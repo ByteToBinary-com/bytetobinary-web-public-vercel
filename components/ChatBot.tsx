@@ -63,7 +63,7 @@ export default function ChatBot() {
 
     // Add user message
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       text: inputValue,
       sender: 'user',
       timestamp: new Date(),
@@ -80,7 +80,7 @@ export default function ChatBot() {
       
       setTimeout(() => {
         const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
+          id: crypto.randomUUID(),
           text: 'Thank you for your inquiry! To assist you better, could you please provide your full name?',
           sender: 'bot',
           timestamp: new Date(),
@@ -95,7 +95,7 @@ export default function ChatBot() {
       
       setTimeout(() => {
         const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
+          id: crypto.randomUUID(),
           text: `Nice to meet you, ${inputValue}! What is your email address?`,
           sender: 'bot',
           timestamp: new Date(),
@@ -110,7 +110,7 @@ export default function ChatBot() {
       
       setTimeout(() => {
         const botMessage: Message = {
-          id: (Date.now() + 1).toString(),
+          id: crypto.randomUUID(),
           text: 'Great! And what is your phone number?',
           sender: 'bot',
           timestamp: new Date(),
@@ -139,7 +139,7 @@ export default function ChatBot() {
 
         if (response.ok) {
           const botMessage: Message = {
-            id: (Date.now() + 1).toString(),
+            id: crypto.randomUUID(),
             text: `Perfect! Thank you ${contactData.name}. We've received your information and will get back to you at ${contactData.email} shortly. Our team will review your inquiry and contact you soon!`,
             sender: 'bot',
             timestamp: new Date(),
@@ -152,7 +152,7 @@ export default function ChatBot() {
         }
       } catch (error) {
         const errorMessage: Message = {
-          id: (Date.now() + 1).toString(),
+          id: crypto.randomUUID(),
           text: 'Sorry, there was an error saving your information. Please try again or use our contact form.',
           sender: 'bot',
           timestamp: new Date(),
