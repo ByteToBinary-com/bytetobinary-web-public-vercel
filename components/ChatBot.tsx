@@ -14,6 +14,17 @@ interface Message {
 
 type ChatStage = 'greeting' | 'query' | 'contact_name' | 'contact_email' | 'contact_phone' | 'complete';
 
+// Sanitize user input to prevent XSS attacks
+function sanitizeInput(input: string): string {
+  // Remove HTML tags and special characters that could be used for XSS
+  return input
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;')
+    .replace(/\//g, '&#x2F;');
+}
+
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -64,7 +75,7 @@ export default function ChatBot() {
     // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue,
+      text: sanitizeInput(inputValue),
       sender: 'user',
       timestamp: new Date(),
     };
@@ -76,7 +87,7 @@ export default function ChatBot() {
     // Handle different chat stages
     if (chatStage === 'query') {
       // User entered their query
-      setContactData((prev) => ({ ...prev, query: inputValue }));
+      setContactData((prev) => ({ ...prev, query: sanitizeInput(inputValue) }));
       
       setTimeout(() => {
         const botMessage: Message = {
@@ -91,12 +102,12 @@ export default function ChatBot() {
       }, 500);
     } else if (chatStage === 'contact_name') {
       // User entered their name
-      setContactData((prev) => ({ ...prev, name: inputValue }));
+      setContactData((prev) => ({ ...prev, name: sanitizeInput(inputValue) }));
       
       setTimeout(() => {
         const botMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: `Nice to meet you, ${inputValue}! What is your email address?`,
+          text: `Nice to meet you, ${sanitizeInput(inputValue)}! What is your email address?`,
           sender: 'bot',
           timestamp: new Date(),
         };
@@ -106,7 +117,7 @@ export default function ChatBot() {
       }, 500);
     } else if (chatStage === 'contact_email') {
       // User entered their email
-      setContactData((prev) => ({ ...prev, email: inputValue }));
+      setContactData((prev) => ({ ...prev, email: sanitizeInput(inputValue) }));
       
       setTimeout(() => {
         const botMessage: Message = {
@@ -121,7 +132,7 @@ export default function ChatBot() {
       }, 500);
     } else if (chatStage === 'contact_phone') {
       // User entered phone, save to database
-      setContactData((prev) => ({ ...prev, phone: inputValue }));
+      setContactData((prev) => ({ ...prev, phone: sanitizeInput(inputValue) }));
       
       try {
         const response = await fetch('/api/contact', {
@@ -140,7 +151,7 @@ export default function ChatBot() {
         if (response.ok) {
           const botMessage: Message = {
             id: (Date.now() + 1).toString(),
-            text: `Perfect! Thank you ${contactData.name}. We've received your information and will get back to you at ${contactData.email} shortly. Our team will review your inquiry and contact you soon!`,
+            text: `Perfect! Thank you ${sanitizeInput(contactData.name)}. We've received your information and will get back to you at ${sanitizeInput(contactData.email)} shortly. Our team will review your inquiry and contact you soon!`,
             sender: 'bot',
             timestamp: new Date(),
           };
