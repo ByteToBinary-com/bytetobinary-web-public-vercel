@@ -41,7 +41,7 @@ export default function ChatBot() {
       setMessages([welcomeMessage]);
       setChatStage('query');
     }
-  }, [isOpen]);
+  }, [isOpen, messages]);
 
   // Auto-scroll to latest message
   useEffect(() => {
