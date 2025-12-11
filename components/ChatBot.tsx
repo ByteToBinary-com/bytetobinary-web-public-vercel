@@ -113,6 +113,7 @@ export default function ChatBot() {
     } else if (chatStage === 'contact_email') {
       // User entered their email - validate before proceeding
       if (!isValidEmail(inputValue)) {
+        setIsLoading(false);
         setTimeout(() => {
           const botMessage: Message = {
             id: (Date.now() + 1).toString(),
@@ -121,7 +122,6 @@ export default function ChatBot() {
             timestamp: new Date(),
           };
           setMessages((prev) => [...prev, botMessage]);
-          setIsLoading(false);
         }, 500);
         return;
       }
