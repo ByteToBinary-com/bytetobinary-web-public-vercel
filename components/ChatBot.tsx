@@ -98,10 +98,13 @@ export default function ChatBot() {
 
   // Set initial focus when dialog opens
   useEffect(() => {
-    if (isOpen && closeButtonRef.current) {
-      closeButtonRef.current.focus();
+    if (isOpen && inputRef.current && chatStage !== 'complete') {
+      // Focus on input field for better user experience
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 100);
     }
-  }, [isOpen]);
+  }, [isOpen, chatStage]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -334,6 +337,15 @@ export default function ChatBot() {
                   type="submit"
                   disabled={isInputDisabled || !inputValue.trim()}
                   className="px-4 py-2 bg-[var(--accent-blue)] text-white rounded-lg hover:bg-[var(--accent-blue)]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-semibold"
+                  aria-label={
+                    chatStage === 'query'
+                      ? 'Send your inquiry'
+                      : chatStage === 'contact_name'
+                      ? 'Send your name'
+                      : chatStage === 'contact_email'
+                      ? 'Send your email address'
+                      : 'Send your phone number'
+                  }
                 >
                   Send
                 </button>
