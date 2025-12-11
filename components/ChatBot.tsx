@@ -146,7 +146,6 @@ export default function ChatBot() {
           };
           setMessages((prev) => [...prev, botMessage]);
           setChatStage('complete');
-          setIsLoading(false);
         } else {
           throw new Error('Failed to save contact');
         }
@@ -158,6 +157,7 @@ export default function ChatBot() {
           timestamp: new Date(),
         };
         setMessages((prev) => [...prev, errorMessage]);
+      } finally {
         setIsLoading(false);
       }
     }
