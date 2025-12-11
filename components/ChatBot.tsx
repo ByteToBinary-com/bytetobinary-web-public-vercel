@@ -281,6 +281,17 @@ export default function ChatBot() {
                   type="submit"
                   disabled={isInputDisabled || !inputValue.trim()}
                   className="px-4 py-2 bg-[var(--accent-blue)] text-white rounded-lg hover:bg-[var(--accent-blue)]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-sm font-semibold"
+                  aria-label={
+                    chatStage === 'query'
+                      ? 'Send inquiry'
+                      : chatStage === 'contact_name'
+                      ? 'Send name'
+                      : chatStage === 'contact_email'
+                      ? 'Send email'
+                      : chatStage === 'contact_phone'
+                      ? 'Send phone number'
+                      : 'Send message'
+                  }
                 >
                   Send
                 </button>
