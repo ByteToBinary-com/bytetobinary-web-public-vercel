@@ -131,14 +131,9 @@ export default function ChatBot() {
           throw new Error('Failed to save contact');
         }
       } catch (error) {
-        const errorMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          text: 'Sorry, there was an error saving your information. Please try again or use our contact form.',
-          sender: 'bot',
-          timestamp: new Date(),
-        };
-        setMessages((prev) => [...prev, errorMessage]);
-        setIsLoading(false);
+        addBotMessage(
+          'Sorry, there was an error saving your information. Please try again or use our contact form.'
+        );
       }
     }
   };
@@ -153,7 +148,7 @@ export default function ChatBot() {
   const isInputDisabled = isLoading || chatStage === 'complete';
 
   // Helper function to add bot message and update state
-  const addBotMessage = (text: string, nextStage: ChatStage) => {
+  const addBotMessage = (text: string, nextStage?: ChatStage) => {
     const botMessage: Message = {
       id: (Date.now() + 1).toString(),
       text,
@@ -161,7 +156,9 @@ export default function ChatBot() {
       timestamp: new Date(),
     };
     setMessages((prev) => [...prev, botMessage]);
-    setChatStage(nextStage);
+    if (nextStage) {
+      setChatStage(nextStage);
+    }
     setIsLoading(false);
   };
 
