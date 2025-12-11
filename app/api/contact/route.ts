@@ -8,11 +8,13 @@ export async function POST(req: NextRequest) {
   
   // Check rate limit
   let rateLimitResult;
+  let rateLimitSuccess = true;
   try {
     rateLimitResult = await ratelimit.limit(ip);
   } catch (error) {
     console.error('Rate limiting error:', error);
-    // If rate limiting fails, allow the request to proceed
+    // If rate limiting fails, allow the request to proceed without rate limit info
+    rateLimitSuccess = false;
     rateLimitResult = { success: true, limit: 0, reset: 0, remaining: 0 };
   }
   
@@ -37,6 +39,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  // Helper to add rate limit headers conditionally
+  const addRateLimitHeaders = (headers: Record<string, string> = {}) => {
+    if (rateLimitSuccess) {
+      return {
+        ...headers,
+        'X-RateLimit-Limit': limit.toString(),
+        'X-RateLimit-Remaining': remaining.toString(),
+        'X-RateLimit-Reset': reset.toString(),
+      };
+    }
+    return headers;
+  };
+
   try {
     const body = await req.json();
     const { name, email, message, company, phone } = body;
@@ -47,11 +62,7 @@ export async function POST(req: NextRequest) {
         { error: 'Missing required fields: name, email, message' },
         { 
           status: 400,
-          headers: {
-            'X-RateLimit-Limit': limit.toString(),
-            'X-RateLimit-Remaining': remaining.toString(),
-            'X-RateLimit-Reset': reset.toString(),
-          }
+          headers: addRateLimitHeaders()
         }
       );
     }
@@ -69,11 +80,7 @@ export async function POST(req: NextRequest) {
       { success: true, id: contact.id },
       { 
         status: 201,
-        headers: {
-          'X-RateLimit-Limit': limit.toString(),
-          'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': reset.toString(),
-        }
+        headers: addRateLimitHeaders()
       }
     );
   } catch (error) {
@@ -82,11 +89,7 @@ export async function POST(req: NextRequest) {
       { error: 'Failed to save contact form' },
       { 
         status: 500,
-        headers: {
-          'X-RateLimit-Limit': limit.toString(),
-          'X-RateLimit-Remaining': remaining.toString(),
-          'X-RateLimit-Reset': reset.toString(),
-        }
+        headers: addRateLimitHeaders()
       }
     );
   }
