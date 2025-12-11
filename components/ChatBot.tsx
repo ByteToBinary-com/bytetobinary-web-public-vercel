@@ -29,6 +29,27 @@ export default function ChatBot() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Error message constants
+  const DEFAULT_ERROR_MESSAGE = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
+
+  // Function to get error message based on response status
+  const getErrorMessageFromStatus = (status: number): string => {
+    if (status >= 400 && status < 500) {
+      // Client errors (4xx)
+      if (status === 400) {
+        return 'Invalid data provided. Please check your information and try again.';
+      } else if (status === 429) {
+        return 'Too many requests. Please wait a moment and try again.';
+      } else {
+        return 'Invalid request. Please check your information and try again.';
+      }
+    } else if (status >= 500) {
+      // Server errors (5xx)
+      return 'Our server is experiencing issues. Please try again in a few moments or use our contact form.';
+    }
+    return DEFAULT_ERROR_MESSAGE;
+  };
+
   // Initialize with welcome message
   useEffect(() => {
     if (isOpen && messages.length === 0) {
@@ -149,26 +170,10 @@ export default function ChatBot() {
           setIsLoading(false);
         } else {
           // Handle different HTTP error statuses
-          let errorText = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
-          
-          if (response.status >= 400 && response.status < 500) {
-            // Client errors (4xx)
-            if (response.status === 400) {
-              errorText = 'Invalid data provided. Please check your information and try again.';
-            } else if (response.status === 429) {
-              errorText = 'Too many requests. Please wait a moment and try again.';
-            } else {
-              errorText = 'Invalid request. Please check your information and try again.';
-            }
-          } else if (response.status >= 500) {
-            // Server errors (5xx)
-            errorText = 'Our server is experiencing issues. Please try again in a few moments or use our contact form.';
-          }
-          
-          throw new Error(errorText);
+          throw new Error(getErrorMessageFromStatus(response.status));
         }
       } catch (error) {
-        let errorText = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
+        let errorText = DEFAULT_ERROR_MESSAGE;
         
         // Check if it's a network error (TypeError thrown by fetch indicates network issues)
         if (error instanceof TypeError) {
