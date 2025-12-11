@@ -59,53 +59,46 @@ export default function ChatBot() {
     }
   }, [messages, isLoading, isOpen, chatStage]);
 
-  // Focus trapping for accessibility
+  // Focus trapping and keyboard navigation for accessibility
   useEffect(() => {
     if (!isOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== 'Tab') return;
+      // Handle Escape key to close dialog
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        return;
+      }
 
-      const chatWindow = chatWindowRef.current;
-      if (!chatWindow) return;
+      // Handle Tab key for focus trapping
+      if (e.key === 'Tab') {
+        const chatWindow = chatWindowRef.current;
+        if (!chatWindow) return;
 
-      const focusableElements = chatWindow.querySelectorAll<HTMLElement>(
-        'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
-      );
-      const firstFocusable = focusableElements[0];
-      const lastFocusable = focusableElements[focusableElements.length - 1];
+        const focusableElements = chatWindow.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        );
+        const firstFocusable = focusableElements[0];
+        const lastFocusable = focusableElements[focusableElements.length - 1];
 
-      if (e.shiftKey) {
-        // Shift + Tab
-        if (document.activeElement === firstFocusable) {
-          e.preventDefault();
-          lastFocusable?.focus();
-        }
-      } else {
-        // Tab
-        if (document.activeElement === lastFocusable) {
-          e.preventDefault();
-          firstFocusable?.focus();
+        if (e.shiftKey) {
+          // Shift + Tab
+          if (document.activeElement === firstFocusable) {
+            e.preventDefault();
+            lastFocusable?.focus();
+          }
+        } else {
+          // Tab
+          if (document.activeElement === lastFocusable) {
+            e.preventDefault();
+            firstFocusable?.focus();
+          }
         }
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, chatStage, isLoading]);
-
-  // Handle Escape key to close dialog
-  useEffect(() => {
-    if (!isOpen) return;
-
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
   }, [isOpen]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
