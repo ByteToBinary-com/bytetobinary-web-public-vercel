@@ -28,7 +28,7 @@ export default function ChatBot() {
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const isMountedRef = useRef(true);
+  const isMountedRef = useRef(false);
   const timeoutIdsRef = useRef<NodeJS.Timeout[]>([]);
 
   // Track component mount state
@@ -66,9 +66,16 @@ export default function ChatBot() {
           inputRef.current.focus();
           inputRef.current.select();
         }
+        // Remove completed timeout from tracking array
+        timeoutIdsRef.current = timeoutIdsRef.current.filter(id => id !== timeoutId);
       }, 100);
       
-      return () => clearTimeout(timeoutId);
+      timeoutIdsRef.current.push(timeoutId);
+      
+      return () => {
+        clearTimeout(timeoutId);
+        timeoutIdsRef.current = timeoutIdsRef.current.filter(id => id !== timeoutId);
+      };
     }
   }, [messages, isLoading, isOpen, chatStage]);
 
