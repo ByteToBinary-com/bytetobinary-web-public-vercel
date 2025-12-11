@@ -3,23 +3,52 @@ import React, { useState } from 'react';
 
 export default function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [name, setName] = useState('');
   const [company, setCompany] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
+    setIsLoading(true);
+    setError('');
 
-    // TODO: wire up to API
-    setName('');
-    setCompany('');
-    setEmail('');
-    setPhone('');
-    setMessage('');
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          company,
+          phone,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit contact form');
+      }
+
+      setIsSubmitted(true);
+      setTimeout(() => setIsSubmitted(false), 3000);
+      
+      // Clear form
+      setName('');
+      setCompany('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -55,13 +84,17 @@ export default function ContactForm() {
         </div>
 
         <div>
-          <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-[var(--accent-blue)] hover:bg-[var(--accent-blue)/90] transition-colors" disabled={isSubmitted}>
-            {isSubmitted ? 'Message Sent' : 'Send Message'}
+          <button type="submit" className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-[var(--accent-blue)] hover:bg-[var(--accent-blue)/90] transition-colors disabled:opacity-50" disabled={isSubmitted || isLoading}>
+            {isLoading ? 'Sending...' : isSubmitted ? 'Message Sent' : 'Send Message'}
           </button>
         </div>
 
         {isSubmitted && (
           <p role="status" aria-live="polite" className="mt-2 text-center text-gray-600 font-medium">Thank you — we'll be in touch soon.</p>
+        )}
+
+        {error && (
+          <p role="status" aria-live="polite" className="mt-2 text-center text-red-600 font-medium">{error}</p>
         )}
       </form>
     </div>
