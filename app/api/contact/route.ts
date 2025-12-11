@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { rateLimit, getRateLimitHeaders } from '@/lib/rate-limit';
 
+// Email validation regex pattern
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function isValidEmail(email: string): boolean {
+  return EMAIL_REGEX.test(email);
+}
+
 export async function POST(req: NextRequest) {
   try {
     // Get client IP for rate limiting
@@ -29,6 +36,14 @@ export async function POST(req: NextRequest) {
     if (!name || !email || !message) {
       return NextResponse.json(
         { error: 'Missing required fields: name, email, message' },
+        { status: 400 }
+      );
+    }
+
+    // Validate email format
+    if (typeof email !== 'string' || !isValidEmail(email)) {
+      return NextResponse.json(
+        { error: 'Invalid email format' },
         { status: 400 }
       );
     }
