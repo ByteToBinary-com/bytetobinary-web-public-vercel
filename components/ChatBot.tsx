@@ -148,12 +148,39 @@ export default function ChatBot() {
           setChatStage('complete');
           setIsLoading(false);
         } else {
-          throw new Error('Failed to save contact');
+          // Handle different HTTP error statuses
+          let errorText = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
+          
+          if (response.status >= 400 && response.status < 500) {
+            // Client errors (4xx)
+            if (response.status === 400) {
+              errorText = 'Invalid data provided. Please check your information and try again.';
+            } else if (response.status === 429) {
+              errorText = 'Too many requests. Please wait a moment and try again.';
+            } else {
+              errorText = 'Invalid request. Please check your information and try again.';
+            }
+          } else if (response.status >= 500) {
+            // Server errors (5xx)
+            errorText = 'Our server is experiencing issues. Please try again in a few moments or use our contact form.';
+          }
+          
+          throw new Error(errorText);
         }
       } catch (error) {
+        let errorText = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
+        
+        // Check if it's a network error
+        if (error instanceof TypeError && error.message.includes('fetch')) {
+          errorText = 'Network error. Please check your internet connection and try again.';
+        } else if (error instanceof Error && error.message !== 'Failed to save contact') {
+          // Use the specific error message if it was thrown from the response handling above
+          errorText = error.message;
+        }
+        
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: 'Sorry, there was an error saving your information. Please try again or use our contact form.',
+          text: errorText,
           sender: 'bot',
           timestamp: new Date(),
         };
