@@ -14,6 +14,12 @@ interface Message {
 
 type ChatStage = 'greeting' | 'query' | 'contact_name' | 'contact_email' | 'contact_phone' | 'complete';
 
+// Email validation function
+const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -105,7 +111,21 @@ export default function ChatBot() {
         setIsLoading(false);
       }, 500);
     } else if (chatStage === 'contact_email') {
-      // User entered their email
+      // User entered their email - validate before proceeding
+      if (!isValidEmail(inputValue)) {
+        setTimeout(() => {
+          const botMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            text: 'Please enter a valid email address (e.g., name@example.com).',
+            sender: 'bot',
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, botMessage]);
+          setIsLoading(false);
+        }, 500);
+        return;
+      }
+      
       setContactData((prev) => ({ ...prev, email: inputValue }));
       
       setTimeout(() => {
@@ -262,7 +282,7 @@ export default function ChatBot() {
               <form onSubmit={handleSendMessage} className="flex gap-2">
                 <input
                   ref={inputRef}
-                  type="text"
+                  type={chatStage === 'contact_email' ? 'email' : 'text'}
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder={
