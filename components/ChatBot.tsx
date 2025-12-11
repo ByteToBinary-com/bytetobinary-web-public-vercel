@@ -148,12 +148,47 @@ export default function ChatBot() {
           setChatStage('complete');
           setIsLoading(false);
         } else {
-          throw new Error('Failed to save contact');
+          // Parse error response to provide specific feedback
+          let errorText = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
+          
+          try {
+            const errorData = await response.json();
+            
+            if (response.status === 429) {
+              // Rate limiting error
+              errorText = 'You\'ve sent too many requests. Please wait a moment and try again.';
+            } else if (response.status === 400) {
+              // Validation error
+              if (errorData.error && errorData.error.includes('Missing required fields')) {
+                errorText = 'Some required information is missing. Please make sure you\'ve provided your name, email, and inquiry.';
+              } else if (errorData.error && errorData.error.includes('Field length exceeded')) {
+                errorText = 'Some of your information is too long. Please use shorter text and try again.';
+              } else {
+                errorText = 'The information provided is invalid. Please check your details and try again.';
+              }
+            } else if (response.status === 500) {
+              // Server error
+              errorText = 'Our system is experiencing issues. Please try again in a few moments or use our contact form.';
+            }
+          } catch (parseError) {
+            // If parsing fails, use default error message
+            console.error('Error parsing response:', parseError);
+          }
+          
+          const errorMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            text: errorText,
+            sender: 'bot',
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, errorMessage]);
+          setIsLoading(false);
         }
       } catch (error) {
+        // Network or other unexpected errors
         const errorMessage: Message = {
           id: (Date.now() + 1).toString(),
-          text: 'Sorry, there was an error saving your information. Please try again or use our contact form.',
+          text: 'Unable to connect to our server. Please check your internet connection and try again, or use our contact form.',
           sender: 'bot',
           timestamp: new Date(),
         };
