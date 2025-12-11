@@ -33,7 +33,7 @@ export default function ChatBot() {
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       const welcomeMessage: Message = {
-        id: '1',
+        id: crypto.randomUUID(),
         text: 'Hello! How may I help you?',
         sender: 'bot',
         timestamp: new Date(),
