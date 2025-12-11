@@ -19,6 +19,7 @@ const DEFAULT_ERROR_MESSAGE = 'Sorry, there was an error saving your information
 const NETWORK_ERROR_MESSAGE = 'Network error. Please check your internet connection and try again.';
 
 // Function to get error message based on response status
+// Note: This is only called when response.ok is false (status >= 300)
 const getErrorMessageFromStatus = (status: number): string => {
   if (status >= 400 && status < 500) {
     // Client errors (4xx)
