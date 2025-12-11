@@ -14,6 +14,27 @@ interface Message {
 
 type ChatStage = 'greeting' | 'query' | 'contact_name' | 'contact_email' | 'contact_phone' | 'complete';
 
+// Error message constants
+const DEFAULT_ERROR_MESSAGE = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
+
+// Function to get error message based on response status
+const getErrorMessageFromStatus = (status: number): string => {
+  if (status >= 400 && status < 500) {
+    // Client errors (4xx)
+    if (status === 400) {
+      return 'Invalid data provided. Please check your information and try again.';
+    } else if (status === 429) {
+      return 'Too many requests. Please wait a moment and try again.';
+    } else {
+      return 'Invalid request. Please check your information and try again.';
+    }
+  } else if (status >= 500) {
+    // Server errors (5xx)
+    return 'Our server is experiencing issues. Please try again in a few moments or use our contact form.';
+  }
+  return DEFAULT_ERROR_MESSAGE;
+};
+
 export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -28,27 +49,6 @@ export default function ChatBot() {
   });
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Error message constants
-  const DEFAULT_ERROR_MESSAGE = 'Sorry, there was an error saving your information. Please try again or use our contact form.';
-
-  // Function to get error message based on response status
-  const getErrorMessageFromStatus = (status: number): string => {
-    if (status >= 400 && status < 500) {
-      // Client errors (4xx)
-      if (status === 400) {
-        return 'Invalid data provided. Please check your information and try again.';
-      } else if (status === 429) {
-        return 'Too many requests. Please wait a moment and try again.';
-      } else {
-        return 'Invalid request. Please check your information and try again.';
-      }
-    } else if (status >= 500) {
-      // Server errors (5xx)
-      return 'Our server is experiencing issues. Please try again in a few moments or use our contact form.';
-    }
-    return DEFAULT_ERROR_MESSAGE;
-  };
 
   // Initialize with welcome message
   useEffect(() => {
