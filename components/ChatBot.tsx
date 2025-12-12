@@ -132,7 +132,6 @@ export default function ChatBot() {
 
   // Helper function to add bot message and update state
   const addBotMessage = (text: string, nextStage: ChatStage, delay: number = 500) => {
-    setIsLoading(true);
     setTimeout(() => {
       if (!isMountedRef.current) return;
       const botMessage: Message = {
