@@ -3,8 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { RiChat3Line } from 'react-icons/ri';
-import { MdHeadset, MdCheckCircle } from 'react-icons/md';
-import { MdSend } from 'react-icons/md';
+import { MdHeadset, MdCheckCircle, MdSend } from 'react-icons/md';
 
 interface Message {
   id: string;
@@ -21,7 +20,7 @@ const generateMessageId = (): string => {
     return window.crypto.randomUUID();
   }
   // Fallback for environments without crypto.randomUUID
-  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
 };
 
 export default function ChatBot() {
@@ -51,7 +50,6 @@ export default function ChatBot() {
 
   // Initialize with welcome message
   useEffect(() => {
-    isMountedRef.current = true;
     if (isOpen && messages.length === 0) {
       const welcomeMessage: Message = {
         id: generateMessageId(),
@@ -66,7 +64,9 @@ export default function ChatBot() {
 
   // Auto-scroll to latest message
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
     // Focus and select input after bot replies
     if (isOpen && !isLoading && chatStage !== 'complete' && chatStage !== 'greeting') {
       const timeoutId = setTimeout(() => {
@@ -132,7 +132,8 @@ export default function ChatBot() {
 
   // Helper function to add bot message and update state
   const addBotMessage = (text: string, nextStage: ChatStage, delay: number = 500) => {
-    const timeoutId = setTimeout(() => {
+    setIsLoading(true);
+    setTimeout(() => {
       if (!isMountedRef.current) return;
       const botMessage: Message = {
         id: generateMessageId(),
@@ -144,21 +145,9 @@ export default function ChatBot() {
       setChatStage(nextStage);
       setIsLoading(false);
     }, delay);
-    return () => clearTimeout(timeoutId);
   };
 
-  // Email validation helper
-  const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
 
-  // Sanitize user input to prevent XSS attacks
-  const sanitizeInput = (input: string): string => {
-    const div = document.createElement('div');
-    div.textContent = input;
-    return div.innerHTML;
-  };
 
   // Get maximum length for current chat stage
   const getMaxLength = (): number => {
@@ -220,21 +209,6 @@ export default function ChatBot() {
     e.preventDefault();
     if (!inputValue.trim()) return;
 
-    // Validate input length based on current stage
-    const maxLength = getMaxLength();
-    if (inputValue.length > maxLength) {
-      setIsLoading(true);
-      const fieldName = chatStage === 'query' ? 'Message'
-        : chatStage === 'contact_name' ? 'Name'
-        : chatStage === 'contact_email' ? 'Email'
-        : 'Phone';
-      return addBotMessage(
-        `${fieldName} must be no more than ${maxLength} characters`,
-        chatStage,
-        500
-      );
-    }
-
     // Add user message
     const userMessage: Message = {
       id: generateMessageId(),
@@ -250,88 +224,77 @@ export default function ChatBot() {
     // Handle different chat stages
     if (chatStage === 'query') {
       setContactData((prev) => ({ ...prev, query: inputValue }));
-      return addBotMessage(
+      addBotMessage(
         'Thank you for your inquiry! To assist you better, could you please provide your full name?',
         'contact_name'
       );
     } else if (chatStage === 'contact_name') {
       setContactData((prev) => ({ ...prev, name: inputValue }));
-      return addBotMessage(
-        `Nice to meet you, ${sanitizeInput(inputValue)}! What is your email address?`,
+      addBotMessage(
+        `Nice to meet you, ${inputValue}! What is your email address?`,
         'contact_email'
       );
     } else if (chatStage === 'contact_email') {
-      // Validate email format before proceeding
-      if (!validateEmail(inputValue)) {
-        setIsLoading(true);
-        return addBotMessage(
-          'Please enter a valid email address (e.g., name@example.com)',
-          'contact_email',
-          500
-        );
-      }
       setContactData((prev) => ({ ...prev, email: inputValue }));
-      return addBotMessage(
+      addBotMessage(
         'Great! And what is your phone number?',
         'contact_phone'
       );
     } else if (chatStage === 'contact_phone') {
       setContactData((prev) => ({ ...prev, phone: inputValue }));
       
-      (async () => {
-        try {
-          const response = await fetch('/api/contact', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              name: contactData.name,
-              email: contactData.email,
-              message: contactData.query,
-              phone: inputValue,
-            }),
-          });
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: contactData.name,
+            email: contactData.email,
+            message: contactData.query,
+            phone: inputValue,
+          }),
+        });
 
-          if (!isMountedRef.current) return;
+        if (!isMountedRef.current) return;
 
-          if (response.ok) {
-            const botMessage: Message = {
-              id: generateMessageId(),
-              text: `Perfect! Thank you ${sanitizeInput(contactData.name)}. We've received your information and will get back to you at ${sanitizeInput(contactData.email)} shortly. Our team will review your inquiry and contact you soon!`,
-              sender: 'bot',
-              timestamp: new Date(),
-            };
-            setMessages((prev) => [...prev, botMessage]);
-            setChatStage('complete');
-          } else {
-            // Get specific error message based on HTTP status
-            const errorMessage = getErrorMessage(null, response.status);
-            const botMessage: Message = {
-              id: generateMessageId(),
-              text: errorMessage,
-              sender: 'bot',
-              timestamp: new Date(),
-            };
-            setMessages((prev) => [...prev, botMessage]);
-          }
-        } catch (error) {
-          if (!isMountedRef.current) return;
-          // Get specific error message based on error type
-          const errorText = getErrorMessage(error);
+        if (response.ok) {
           const botMessage: Message = {
             id: generateMessageId(),
-            text: errorText,
+            text: `Perfect! Thank you ${contactData.name}. We've received your information and will get back to you at ${contactData.email} shortly. Our team will review your inquiry and contact you soon!`,
             sender: 'bot',
             timestamp: new Date(),
           };
           setMessages((prev) => [...prev, botMessage]);
-        } finally {
-          // Always clear loading state, regardless of mount status
-          // This ensures the UI doesn't remain in a loading state
-          setIsLoading(false);
+          setChatStage('complete');
+        } else {
+          // Get specific error message based on HTTP status
+          const errorMessage = getErrorMessage(null, response.status);
+          const botMessage: Message = {
+            id: generateMessageId(),
+            text: errorMessage,
+            sender: 'bot',
+            timestamp: new Date(),
+          };
+          setMessages((prev) => [...prev, botMessage]);
         }
-      })();
+      } catch (error) {
+        if (!isMountedRef.current) return;
+        // Get specific error message based on error type
+        const errorText = getErrorMessage(error);
+        const botMessage: Message = {
+          id: generateMessageId(),
+          text: errorText,
+          sender: 'bot',
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, botMessage]);
+      } finally {
+        // Always clear loading state, regardless of mount status
+        // This ensures the UI doesn't remain in a loading state
+        setIsLoading(false);
+      }
     }
   };
 
@@ -489,7 +452,7 @@ export default function ChatBot() {
                     <MdSend size={20} />
                   </button>
                 </form>
-                {inputValue.length > 0 && chatStage !== 'greeting' && (
+                {inputValue.length > 0 && (
                   <div className="text-xs text-gray-500 mt-2 text-right">
                     {inputValue.length} / {getMaxLength()} characters
                   </div>
